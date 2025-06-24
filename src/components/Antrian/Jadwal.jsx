@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase"; 
+import { jadwalAPI } from "../../lib/supabase";
 import JadwalTable from "./JadwalTable";
 
 export default function Jadwal() {
@@ -9,7 +9,7 @@ export default function Jadwal() {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await supabase.fetchJadwal();
+        const res = await jadwalAPI.fetchJadwal();
         setData(res);
       } catch (err) {
         console.error("Gagal fetch jadwal:", err);

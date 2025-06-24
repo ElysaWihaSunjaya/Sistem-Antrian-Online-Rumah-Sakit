@@ -3,7 +3,6 @@ import Jadwal from "../../components/Antrian/JadwalTable";
 import Riwayat from "../../components/Antrian/Riwayat";
 import Status from "../../components/Antrian/Status";
 import PageMeta from "../../components/common/PageMeta";
-
 export default function Home() {
   return (
     <>

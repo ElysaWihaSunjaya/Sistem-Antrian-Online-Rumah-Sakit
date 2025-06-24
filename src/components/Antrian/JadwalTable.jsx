@@ -7,23 +7,7 @@ import {
 } from "../ui/table";
 import Badge from "../ui/badge/Badge";
 
-interface JadwalKunjungan {
-  id: number;
-  nama: string;
-  nik: string;
-  nomor_bpjs: string;
-  poli_tujuan: string;
-  tanggal_kunjungan: string; // Format ISO
-  dokter: string;
-  jadwal: string; // contoh: "08.00 - 10.00"
-  status: "Menunggu" | "Diproses" | "Selesai"; // bisa diperluas jika perlu
-}
-
-interface JadwalTableProps {
-  data: JadwalKunjungan[];
-}
-
-export default function JadwalTable({ data }: JadwalTableProps) {
+export default function JadwalTable({ data = [] }) {
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
       <div className="flex justify-between mb-4">
@@ -36,33 +20,15 @@ export default function JadwalTable({ data }: JadwalTableProps) {
         <Table>
           <TableHeader className="border-gray-100 dark:border-gray-800 border-y">
             <TableRow>
-              <TableCell isHeader className="py-3 text-sm text-gray-500">
-                No
-              </TableCell>
-              <TableCell isHeader className="py-3 text-sm text-gray-500">
-                Nama
-              </TableCell>
-              <TableCell isHeader className="py-3 text-sm text-gray-500">
-                NIK
-              </TableCell>
-              <TableCell isHeader className="py-3 text-sm text-gray-500">
-                No. BPJS
-              </TableCell>
-              <TableCell isHeader className="py-3 text-sm text-gray-500">
-                Poli Tujuan
-              </TableCell>
-              <TableCell isHeader className="py-3 text-sm text-gray-500">
-                Tanggal
-              </TableCell>
-              <TableCell isHeader className="py-3 text-sm text-gray-500">
-                Dokter
-              </TableCell>
-              <TableCell isHeader className="py-3 text-sm text-gray-500">
-                Jadwal
-              </TableCell>
-              <TableCell isHeader className="py-3 text-sm text-gray-500">
-                Status
-              </TableCell>
+              <TableCell isHeader className="py-3 text-sm text-gray-500">No</TableCell>
+              <TableCell isHeader className="py-3 text-sm text-gray-500">Nama</TableCell>
+              <TableCell isHeader className="py-3 text-sm text-gray-500">NIK</TableCell>
+              <TableCell isHeader className="py-3 text-sm text-gray-500">No. BPJS</TableCell>
+              <TableCell isHeader className="py-3 text-sm text-gray-500">Poli Tujuan</TableCell>
+              <TableCell isHeader className="py-3 text-sm text-gray-500">Tanggal</TableCell>
+              <TableCell isHeader className="py-3 text-sm text-gray-500">Dokter</TableCell>
+              <TableCell isHeader className="py-3 text-sm text-gray-500">Jadwal</TableCell>
+              <TableCell isHeader className="py-3 text-sm text-gray-500">Status</TableCell>
             </TableRow>
           </TableHeader>
 
@@ -84,10 +50,10 @@ export default function JadwalTable({ data }: JadwalTableProps) {
                     size="sm"
                     color={
                       row.status === "Selesai"
-                      ? "success"
-                      : row.status === "Diproses"
-                      ? "warning"
-                      : "error"
+                        ? "success"
+                        : row.status === "Diproses"
+                        ? "warning"
+                        : "error"
                     }
                   >
                     {row.status}
