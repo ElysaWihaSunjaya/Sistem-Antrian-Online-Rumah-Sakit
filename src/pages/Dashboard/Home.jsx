@@ -1,8 +1,11 @@
-import Pendaftaran from "../../components/Antrian/Pendaftaran";
-import Jadwal from "../../components/Antrian/JadwalTable";
-import Riwayat from "../../components/Antrian/Riwayat";
-import Status from "../../components/Antrian/Status";
+import Services from "../../components/Antrian/services";
+import Riwayat from "../../components/Antrian/riwayat";
+import Testimonials from "../../components/Antrian/testimonials";
+import Faq from "../../components/Antrian/faq"; 
+import Antrian from "../../components/Antrian/Antrian";
+import Jadwal from "../../components/Antrian/jadwal_dokter"
 import PageMeta from "../../components/common/PageMeta";
+
 export default function Home() {
   return (
     <>
@@ -12,10 +15,12 @@ export default function Home() {
       />
       <div className="grid grid-cols-12 gap-4 md:gap-6">
         <div className="col-span-12 xl:col-span-7">
-          <Pendaftaran />
+          <Antrian />
+          <Faq />
           <Jadwal />
           <Riwayat />
-          <Status />
+          <Services />  
+          <Testimonials />
         </div>
       </div>
     </>
