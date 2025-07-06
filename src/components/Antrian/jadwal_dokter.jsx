@@ -1,70 +1,24 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
+import { useNavigate } from "react-router-dom";
 import { jadwalAPI } from "../../lib/supabase";
 
-export default function JadwalDokter() {
+export default function JadwalList() {
   const [data, setData] = useState([]);
-  const [editingItem, setEditingItem] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    dokter: "",
-    poli: "",
-    hari: "",
-    jam: "",
-    kuota: "",
-    sisa: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-
+  const loadData = async () => {
     try {
       setLoading(true);
-      if (editingItem) {
-        await jadwalAPI.update(editingItem.id, form);
-        setSuccess("Data berhasil diperbarui!");
-      } else {
-        await jadwalAPI.create(form);
-        setSuccess("Data berhasil ditambahkan!");
-      }
-
-      setForm({
-        dokter: "",
-        poli: "",
-        hari: "",
-        jam: "",
-        kuota: "",
-        sisa: "",
-      });
-      setEditingItem(null);
-      await loadData();
+      const res = await jadwalAPI.fetchAll();
+      setData(res);
     } catch {
-      setError("Terjadi kesalahan saat menyimpan data.");
+      setError("Gagal memuat data jadwal dokter.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleEdit = (item) => {
-    setEditingItem(item);
-    setForm({
-      dokter: item.dokter,
-      poli: item.poli,
-      hari: item.hari,
-      jam: item.jam,
-      kuota: item.kuota,
-      sisa: item.sisa,
-    });
   };
 
   const handleDelete = async (id) => {
@@ -81,16 +35,8 @@ export default function JadwalDokter() {
     }
   };
 
-  const loadData = async () => {
-    try {
-      setLoading(true);
-      const res = await jadwalAPI.fetchAll();
-      setData(res);
-    } catch {
-      setError("Gagal memuat data jadwal dokter.");
-    } finally {
-      setLoading(false);
-    }
+  const handleEdit = (item) => {
+    navigate(`/Form/jadwalForm?id=${item.id}`);
   };
 
   useEffect(() => {
@@ -98,61 +44,59 @@ export default function JadwalDokter() {
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Jadwal Dokter</h2>
+    <div className="max-w-6xl mx-auto p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold">Jadwal Dokter</h2>
+        <button
+          onClick={() => navigate("/form/jadwalform")}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          Tambah Jadwal
+        </button>
+      </div>
 
       {error && <p className="text-red-600">{error}</p>}
-      {success && <p className="text-green-600">{success}</p>}
-
-      <form onSubmit={handleSubmit} className="space-y-3 mb-6 bg-white shadow p-4 rounded-xl">
-        <input type="text" name="dokter" value={form.dokter} onChange={handleChange} placeholder="Nama Dokter" required className="input" />
-        <input type="text" name="poli" value={form.poli} onChange={handleChange} placeholder="Poli" required className="input" />
-        <input type="text" name="hari" value={form.hari} onChange={handleChange} placeholder="Hari" required className="input" />
-        <input type="text" name="jam" value={form.jam} onChange={handleChange} placeholder="Jam" required className="input" />
-        <input type="number" name="kuota" value={form.kuota} onChange={handleChange} placeholder="Kuota" required className="input" />
-        <input type="number" name="sisa" value={form.sisa} onChange={handleChange} placeholder="Sisa" required className="input" />
-        <button type="submit" className="btn-primary">{loading ? "Memproses..." : "Simpan"}</button>
-      </form>
-
       {loading && <p>Memuat data...</p>}
       {!loading && data.length === 0 && <p>Tidak ada data.</p>}
 
       {!loading && data.length > 0 && (
-        <table className="w-full border border-gray-200 mt-4">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-2">#</th>
-              <th className="px-4 py-2">Dokter</th>
-              <th className="px-4 py-2">Poli</th>
-              <th className="px-4 py-2">Hari</th>
-              <th className="px-4 py-2">Jam</th>
-              <th className="px-4 py-2">Kuota</th>
-              <th className="px-4 py-2">Sisa</th>
-              <th className="px-4 py-2">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr key={item.id} className="border-t">
-                <td className="px-4 py-2">{index + 1}</td>
-                <td className="px-4 py-2">{item.dokter}</td>
-                <td className="px-4 py-2">{item.poli}</td>
-                <td className="px-4 py-2">{item.hari}</td>
-                <td className="px-4 py-2">{item.jam}</td>
-                <td className="px-4 py-2">{item.kuota}</td>
-                <td className="px-4 py-2">{item.sisa}</td>
-                <td className="px-4 py-2">
-                  <button onClick={() => handleEdit(item)} disabled={loading}>
-                    <AiFillEdit className="text-blue-500 text-xl" />
-                  </button>
-                  <button onClick={() => handleDelete(item.id)} disabled={loading}>
-                    <AiFillDelete className="text-red-500 text-xl ml-2" />
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full border border-gray-200 text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="px-4 py-2">No</th>
+                <th className="px-4 py-2">Dokter</th>
+                <th className="px-4 py-2">Poli</th>
+                <th className="px-4 py-2">Hari</th>
+                <th className="px-4 py-2">Jam</th>
+                <th className="px-4 py-2">Kuota</th>
+                <th className="px-4 py-2">Sisa</th>
+                <th className="px-4 py-2">Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr key={item.id} className="border-t">
+                  <td className="px-4 py-2">{index + 1}</td>
+                  <td className="px-4 py-2">{item.dokter}</td>
+                  <td className="px-4 py-2">{item.poli}</td>
+                  <td className="px-4 py-2">{item.hari}</td>
+                  <td className="px-4 py-2">{item.jam}</td>
+                  <td className="px-4 py-2">{item.kuota}</td>
+                  <td className="px-4 py-2">{item.sisa}</td>
+                  <td className="px-4 py-2 whitespace-nowrap">
+                    <button onClick={() => handleEdit(item)} disabled={loading}>
+                      <AiFillEdit className="text-blue-500 text-xl" />
+                    </button>
+                    <button onClick={() => handleDelete(item.id)} disabled={loading}>
+                      <AiFillDelete className="text-red-500 text-xl ml-2" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

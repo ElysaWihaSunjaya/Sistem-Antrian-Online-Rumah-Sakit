@@ -1,14 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSidebar } from "../context/SidebarContext";
 import ThemeToggleButton from "../components/common/ThemeToggleButton";
-import NotificationDropdown from "../components/header/NotificationDropdown";
-import UserDropdown from "../components/header/UserDropdown";
 
 export default function AppHeader() {
-  const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
-  const inputRef = useRef(null);
 
   const handleToggle = () => {
     if (window.innerWidth >= 1024) {
@@ -17,21 +13,6 @@ export default function AppHeader() {
       toggleMobileSidebar();
     }
   };
-
-  const toggleApplicationMenu = () => {
-    setApplicationMenuOpen(!isApplicationMenuOpen);
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
-        event.preventDefault();
-        inputRef.current?.focus();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
 
   return (
     <header className="sticky top-0 flex w-full bg-white border-gray-200 z-99999 dark:border-gray-800 dark:bg-gray-900 lg:border-b">
@@ -59,59 +40,13 @@ export default function AppHeader() {
             )}
           </button>
 
-          <Link to="/" className="lg:hidden">
-            <img className="dark:hidden" src="./images/logo/logo.svg" alt="Logo" />
-            <img className="hidden dark:block" src="./images/logo/logo-dark.svg" alt="Logo" />
+          <Link to="/" className="lg:hidden text-2xl font-bold">
+            Antrian<span className="text-sky-400">RS</span>
           </Link>
-
-          <button
-            onClick={toggleApplicationMenu}
-            className="flex items-center justify-center w-10 h-10 text-gray-700 rounded-lg z-99999 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 lg:hidden"
-          >
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-              <path
-                fill="currentColor"
-                d="M6 10.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm12 0a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM13.5 12a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
-              />
-            </svg>
-          </button>
-
-          <div className="hidden lg:block">
-            <form>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg className="fill-gray-500 dark:fill-gray-400" width="20" height="20" viewBox="0 0 20 20">
-                    <path
-                      fill="currentColor"
-                      d="M3.04 9.37a6.33 6.33 0 1112.67 0 6.33 6.33 0 01-12.67 0zM9.38 1.54a7.83 7.83 0 100 15.67 7.83 7.83 0 004.98-1.79l2.82 2.82a.75.75 0 101.06-1.06l-2.82-2.82a7.83 7.83 0 00-6.04-12.82z"
-                    />
-                  </svg>
-                </span>
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="Search or type command..."
-                  className="h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pl-12 pr-14 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-800 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                />
-                <button className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 px-[7px] py-[4.5px] text-xs text-gray-500 dark:border-gray-800 dark:bg-white/[0.03] dark:text-gray-400">
-                  <span>⌘</span>
-                  <span>K</span>
-                </button>
-              </div>
-            </form>
-          </div>
         </div>
 
-        <div
-          className={`${
-            isApplicationMenuOpen ? "flex" : "hidden"
-          } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
-        >
-          <div className="flex items-center gap-2 2xsm:gap-3">
-            <ThemeToggleButton />
-            <NotificationDropdown />
-          </div>
-          <UserDropdown />
+        <div className="flex items-center justify-end w-full gap-4 px-5 py-4 lg:px-0">
+          <ThemeToggleButton />
         </div>
       </div>
     </header>

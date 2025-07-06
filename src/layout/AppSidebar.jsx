@@ -1,31 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-
-// Ganti dengan ikon dari react-icons
 import { AiOutlineDashboard } from "react-icons/ai";
-import { FiTable, FiChevronDown, FiMoreHorizontal, FiZap } from "react-icons/fi";
+import { FiTable, FiChevronDown, FiMoreHorizontal } from "react-icons/fi";
 import { useSidebar } from "../context/SidebarContext";
 
 const navItems = [
   {
     icon: <AiOutlineDashboard />,
-    name: "Dashboard",
-    subItems: [{ name: "Antrian Online", path: "/", pro: false }],
+    name: "Antrian Online",
+    path: "/", // langsung tanpa subItems
   },
   {
     icon: <FiTable />,
-    name: "Tables",
-    subItems: [{ name: "Tables", path: "/basic-tables", pro: false }],
-  },
-];
-
-const othersItems = [
-  {
-    icon: <FiZap />,
-    name: "Authentication",
+    name: "Detail",
     subItems: [
-      { name: "Sign In", path: "/signin", pro: false },
-      { name: "Sign Up", path: "/signup", pro: false },
+      { name: "Antrian", path: "/antrian" },
+      { name: "FAQ", path: "/faq" },
+      { name: "Jadwal Dokter", path: "/jadwal_dokter" },
+      { name: "Riwayat", path: "/riwayat" },
+      { name: "Services", path: "/services" },
+      { name: "Testimonials", path: "/testimonials" },
     ],
   },
 ];
@@ -33,7 +27,6 @@ const othersItems = [
 export default function AppSidebar() {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
-
   const [openSubmenu, setOpenSubmenu] = useState(null);
   const [subMenuHeight, setSubMenuHeight] = useState({});
   const subMenuRefs = useRef({});
@@ -45,15 +38,12 @@ export default function AppSidebar() {
 
   useEffect(() => {
     let matched = false;
-    ["main", "others"].forEach((type) => {
-      const items = type === "main" ? navItems : othersItems;
-      items.forEach((nav, index) => {
-        nav.subItems?.forEach((subItem) => {
-          if (isActive(subItem.path)) {
-            setOpenSubmenu({ type, index });
-            matched = true;
-          }
-        });
+    navItems.forEach((nav, index) => {
+      nav.subItems?.forEach((subItem) => {
+        if (isActive(subItem.path)) {
+          setOpenSubmenu({ index });
+          matched = true;
+        }
       });
     });
     if (!matched) setOpenSubmenu(null);
@@ -61,7 +51,7 @@ export default function AppSidebar() {
 
   useEffect(() => {
     if (openSubmenu !== null) {
-      const key = `${openSubmenu.type}-${openSubmenu.index}`;
+      const key = `${openSubmenu.index}`;
       if (subMenuRefs.current[key]) {
         setSubMenuHeight((prev) => ({
           ...prev,
@@ -71,30 +61,28 @@ export default function AppSidebar() {
     }
   }, [openSubmenu]);
 
-  const handleSubmenuToggle = (index, type) => {
+  const handleSubmenuToggle = (index) => {
     setOpenSubmenu((prev) =>
-      prev && prev.type === type && prev.index === index
-        ? null
-        : { type, index }
+      prev && prev.index === index ? null : { index }
     );
   };
 
-  const renderMenuItems = (items, type) => (
+  const renderMenuItems = (items) => (
     <ul className="flex flex-col gap-4">
       {items.map((nav, index) => (
         <li key={nav.name}>
           {nav.subItems ? (
             <button
-              onClick={() => handleSubmenuToggle(index, type)}
+              onClick={() => handleSubmenuToggle(index)}
               className={`menu-item group ${
-                openSubmenu?.type === type && openSubmenu?.index === index
+                openSubmenu?.index === index
                   ? "menu-item-active"
                   : "menu-item-inactive"
               } ${!isExpanded && !isHovered ? "lg:justify-center" : "lg:justify-start"}`}
             >
               <span
                 className={`menu-item-icon-size ${
-                  openSubmenu?.type === type && openSubmenu?.index === index
+                  openSubmenu?.index === index
                     ? "menu-item-icon-active"
                     : "menu-item-icon-inactive"
                 }`}
@@ -107,7 +95,6 @@ export default function AppSidebar() {
               {(isExpanded || isHovered || isMobileOpen) && (
                 <FiChevronDown
                   className={`ml-auto w-5 h-5 transition-transform duration-200 ${
-                    openSubmenu?.type === type &&
                     openSubmenu?.index === index
                       ? "rotate-180 text-brand-500"
                       : ""
@@ -143,14 +130,13 @@ export default function AppSidebar() {
           {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
             <div
               ref={(el) => {
-                subMenuRefs.current[`${type}-${index}`] = el;
+                subMenuRefs.current[`${index}`] = el;
               }}
               className="overflow-hidden transition-all duration-300"
               style={{
                 height:
-                  openSubmenu?.type === type &&
                   openSubmenu?.index === index
-                    ? `${subMenuHeight[`${type}-${index}`]}px`
+                    ? `${subMenuHeight[`${index}`]}px`
                     : "0px",
               }}
             >
@@ -166,30 +152,6 @@ export default function AppSidebar() {
                       }`}
                     >
                       {sub.name}
-                      <span className="flex items-center gap-1 ml-auto">
-                        {sub.new && (
-                          <span
-                            className={`ml-auto ${
-                              isActive(sub.path)
-                                ? "menu-dropdown-badge-active"
-                                : "menu-dropdown-badge-inactive"
-                            } menu-dropdown-badge`}
-                          >
-                            new
-                          </span>
-                        )}
-                        {sub.pro && (
-                          <span
-                            className={`ml-auto ${
-                              isActive(sub.path)
-                                ? "menu-dropdown-badge-active"
-                                : "menu-dropdown-badge-inactive"
-                            } menu-dropdown-badge`}
-                          >
-                            pro
-                          </span>
-                        )}
-                      </span>
                     </Link>
                   </li>
                 ))}
@@ -221,34 +183,16 @@ export default function AppSidebar() {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-        <Link to="/">
-          {isExpanded || isHovered || isMobileOpen ? (
-            <>
-              <img
-                className="dark:hidden"
-                src="/images/logo/logo.svg"
-                alt="Logo"
-                width={150}
-                height={40}
-              />
-              <img
-                className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
-                alt="Logo"
-                width={150}
-                height={40}
-              />
-            </>
-          ) : (
-            <img
-              src="/images/logo/logo-icon.svg"
-              alt="Logo"
-              width={32}
-              height={32}
-            />
-          )}
+        <Link to="/" className="text-2xl font-bold lg:hidden">
+          Antrian<span className="text-sky-400">RS</span>
         </Link>
+        {(isExpanded || isHovered || isMobileOpen) && (
+          <Link to="/" className="text-2xl font-bold hidden lg:block">
+            Antrian<span className="text-sky-400">RS</span>
+          </Link>
+        )}
       </div>
+
       <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
         <nav className="mb-6">
           <div className="flex flex-col gap-4">
@@ -266,23 +210,7 @@ export default function AppSidebar() {
                   <FiMoreHorizontal className="size-6" />
                 )}
               </h2>
-              {renderMenuItems(navItems, "main")}
-            </div>
-            <div>
-              <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                  !isExpanded && !isHovered
-                    ? "lg:justify-center"
-                    : "justify-start"
-                }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Others"
-                ) : (
-                  <FiMoreHorizontal />
-                )}
-              </h2>
-              {renderMenuItems(othersItems, "others")}
+              {renderMenuItems(navItems)}
             </div>
           </div>
         </nav>
