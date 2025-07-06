@@ -1,31 +1,27 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import {
-  ChevronDownIcon,
-  GridIcon,
-  HorizontaLDots,
-  PlugInIcon,
-  TableIcon,
-} from "../icons";
+// Ganti dengan ikon dari react-icons
+import { AiOutlineDashboard } from "react-icons/ai";
+import { FiTable, FiChevronDown, FiMoreHorizontal, FiZap } from "react-icons/fi";
 import { useSidebar } from "../context/SidebarContext";
 
 const navItems = [
   {
-    icon: <GridIcon />,
+    icon: <AiOutlineDashboard />,
     name: "Dashboard",
     subItems: [{ name: "Antrian Online", path: "/", pro: false }],
   },
   {
+    icon: <FiTable />,
     name: "Tables",
-    icon: <TableIcon />,
     subItems: [{ name: "Tables", path: "/basic-tables", pro: false }],
   },
 ];
 
 const othersItems = [
   {
-    icon: <PlugInIcon />,
+    icon: <FiZap />,
     name: "Authentication",
     subItems: [
       { name: "Sign In", path: "/signin", pro: false },
@@ -109,7 +105,7 @@ export default function AppSidebar() {
                 <span className="menu-item-text">{nav.name}</span>
               )}
               {(isExpanded || isHovered || isMobileOpen) && (
-                <ChevronDownIcon
+                <FiChevronDown
                   className={`ml-auto w-5 h-5 transition-transform duration-200 ${
                     openSubmenu?.type === type &&
                     openSubmenu?.index === index
@@ -267,7 +263,7 @@ export default function AppSidebar() {
                 {isExpanded || isHovered || isMobileOpen ? (
                   "Menu"
                 ) : (
-                  <HorizontaLDots className="size-6" />
+                  <FiMoreHorizontal className="size-6" />
                 )}
               </h2>
               {renderMenuItems(navItems, "main")}
@@ -283,7 +279,7 @@ export default function AppSidebar() {
                 {isExpanded || isHovered || isMobileOpen ? (
                   "Others"
                 ) : (
-                  <HorizontaLDots />
+                  <FiMoreHorizontal />
                 )}
               </h2>
               {renderMenuItems(othersItems, "others")}
