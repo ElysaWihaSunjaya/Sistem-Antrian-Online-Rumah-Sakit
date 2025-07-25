@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { AntrianAPI, jadwalAPI } from "../lib/supabase";
 
-const COLORS = ["#8884d8", "#82ca9d"]; // Warna untuk masing-masing slice
+const COLORS = ["#8884d8", "#82ca9d"]; 
 
 export default function AntrianJadwalChart() {
   const [dataChart, setDataChart] = useState([]);

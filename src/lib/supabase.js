@@ -1,5 +1,3 @@
-// src/lib/supabase.js
-
 import axios from "axios";
 
 const BASE_URL = "https://wbiozzfahmnbmyqyqudm.supabase.co/rest/v1";
@@ -43,7 +41,6 @@ function createAPI(tableName) {
   };
 }
 
-// Export masing-masing API sesuai nama tabel
 export const jadwalAPI = createAPI("jadwal_dokter");
 export const AntrianAPI = createAPI("Antrian");
 export const faqAPI = createAPI("faq");

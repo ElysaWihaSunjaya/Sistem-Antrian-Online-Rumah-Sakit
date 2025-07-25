@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { testimonialsAPI } from "../../lib/supabase";
 
 export default function TestimonialsList() {

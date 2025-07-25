@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FiCalendar } from "react-icons/fi";
-import { jadwalAPI } from "../lib/supabase"; // pastikan path benar
+import { jadwalAPI } from "../lib/supabase"; 
 
 export default function CardJadwalDokter() {
   const [count, setCount] = useState(0);
@@ -8,7 +8,7 @@ export default function CardJadwalDokter() {
   useEffect(() => {
     const fetchJadwal = async () => {
       try {
-        const data = await jadwalAPI.fetchAll();  // pakai fetchAll(), bukan .from()
+        const data = await jadwalAPI.fetchAll();  
         setCount(data.length);
       } catch (err) {
         console.error("Gagal memuat data jadwal dokter:", err.message);

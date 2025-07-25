@@ -8,7 +8,7 @@ const navItems = [
   {
     icon: <AiOutlineDashboard />,
     name: "Antrian Online",
-    path: "/", // langsung tanpa subItems
+    path: "/", 
   },
   {
     icon: <FiTable />,

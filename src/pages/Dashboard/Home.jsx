@@ -3,7 +3,6 @@ import Faq from "../../components/Data/FaqList";
 import Riwayat from "../../components/Data/RiwayatList"; 
 import Testimonials from "../../components/Data/TestimonialsList"; 
 import Services from "../../components/Data/ServicesList"; 
-import PageMeta from "../../components/common/PageMeta";
 import CardJadwalDokter from "../../components/CardJadwalDokter";
 import ChartAntrian from "../../components/ChartAntrian";
 import TargetAntrian from "../../components/TargetAntrian";
